@@ -1,0 +1,167 @@
+/* Top Bar (Mobile Only) */
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  z-index: 50;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-base);
+}
+
+.top-bar-inner {
+  height: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+}
+.brand-icon { 
+  font-size: 1.25rem; 
+  color: var(--text-primary);
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-primary);
+}
+
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* Bottom Navigation (Mobile Only) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--bottom-nav-height);
+  z-index: 50;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 var(--space-lg);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) 0;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-base);
+  flex: 1;
+  max-width: 72px;
+}
+.bottom-nav-item:hover, .bottom-nav-item.active {
+  color: var(--text-primary);
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+  transition: transform var(--transition-base);
+}
+.bottom-nav-item:hover .nav-icon {
+  transform: translateY(-1px);
+}
+
+.nav-label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Desktop Sidebar (Desktop Only) ────────────────────────────────── */
+.desktop-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 244px;
+  background: var(--bg-base);
+  border-right: 1px solid var(--border-color);
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  display: none; /* Hidden by default, shown in media query */
+}
+
+.sidebar-top {
+  margin-bottom: var(--space-3xl);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  flex: 1;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 14px 16px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all var(--transition-base);
+  border-left: 2px solid transparent;
+}
+.sidebar-item:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface);
+}
+.sidebar-item.active {
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border-left-color: var(--text-primary);
+}
+
+.sidebar-item .nav-icon {
+  font-size: 1.35rem;
+}
+
+.sidebar-footer {
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: center;
+}
+
+/* Responsive visibility rules */
+@media (min-width: 1000px) {
+  .desktop-sidebar {
+    display: flex; /* Show sidebar on desktop */
+  }
+  .top-bar, .bottom-nav {
+    display: none; /* Hide mobile nav on desktop */
+  }
+}
