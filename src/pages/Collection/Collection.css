@@ -1,0 +1,202 @@
+/* Collection Pages (Wishlist + Cart) */
+.collection-page {
+  padding: calc(var(--navbar-height) + var(--space-xl)) var(--space-lg) calc(var(--bottom-nav-height) + var(--space-xl));
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.collection-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--space-md);
+}
+
+.collection-header-icon {
+  font-size: 1.618rem;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+.wishlist-icon { 
+  color: var(--text-primary); 
+}
+.buy-icon { 
+  color: var(--text-primary); 
+}
+
+.collection-title {
+  font-size: 1.618rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Grid */
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-lg);
+}
+
+@media (max-width: 480px) {
+  .collection-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+/* Dress Card */
+.dress-grid-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  transition: border-color var(--transition-base);
+}
+.dress-grid-card:hover {
+  border-color: var(--text-primary);
+}
+
+.dress-card-media {
+  position: relative;
+  aspect-ratio: 3/4;
+  background: var(--bg-elevated);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-color);
+}
+.dress-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+.dress-grid-card:hover .dress-card-media img {
+  transform: scale(1.03);
+}
+.dress-card-no-thumb {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+}
+.dress-card-price-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-overlay);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dress-card-info {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  flex: 1;
+}
+.dress-card-title {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dress-card-brand {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.dress-card-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.dress-card-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: auto;
+  padding-top: var(--space-md);
+  border-top: 1px dashed var(--border-color);
+}
+.dress-card-btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 0.75rem;
+  height: 36px;
+}
+
+/* Empty state */
+.collection-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-md);
+  padding: var(--space-3xl) var(--space-lg);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+}
+.collection-empty-icon { 
+  font-size: 2.618rem; 
+}
+.collection-empty h3 { 
+  font-size: 1.25rem; 
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+}
+
+.collection-error {
+  text-align: center;
+  padding: var(--space-2xl);
+}
+
+/* Cart Summary */
+.cart-summary {
+  margin-top: var(--space-xl);
+  padding: var(--space-xl);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.cart-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart-summary-row span {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.cart-total {
+  font-size: 1.618rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+}

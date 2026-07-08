@@ -1,0 +1,341 @@
+/* Reels Section Page Post Layout - Instagram Reels Web Clone */
+.reels-post-layout {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  gap: var(--space-xl);
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Left Side Caption (Desktop Only) ────────────────────────────────── */
+.reels-desktop-caption-panel {
+  display: none; /* Mobile first, shown on desktop */
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 280px;
+  padding-bottom: var(--space-lg);
+  text-align: left;
+}
+
+@media (min-width: 1000px) {
+  .reels-desktop-caption-panel {
+    display: flex;
+  }
+}
+
+.reels-brand-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.reels-brand-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.reels-brand-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+}
+
+.reels-caption-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.reels-dress-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.reels-dress-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.reels-dress-price {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-top: var(--space-xs);
+}
+.reels-dress-price .currency {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+}
+.reels-dress-price .price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+}
+
+.reels-dress-sizes {
+  display: flex;
+  gap: 6px;
+  margin-top: var(--space-sm);
+}
+
+/* ── Center 9:16 Video Player ────────────────────────────────────────── */
+.reels-video-card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 9/16; /* strict reels 9:16 layout */
+  background: #000000;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reel-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Inner Mute Overlay button inside video card */
+.reels-inner-mute-btn {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background var(--transition-fast);
+}
+.reels-inner-mute-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* ── Right Side Actions Panel (Desktop Only) ────────────────────────── */
+.reels-desktop-actions-panel {
+  display: none; /* Mobile first, shown on desktop */
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: var(--space-lg);
+}
+
+@media (min-width: 1000px) {
+  .reels-desktop-actions-panel {
+    display: flex;
+  }
+}
+
+.reels-action-btn-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  margin-top: var(--space-lg);
+  transition: all var(--transition-fast);
+}
+.reels-action-btn-circle:hover {
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  border-color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.reels-action-label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+/* ── Swipe Overlays inside video card ───────────────────────────── */
+.swipe-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  z-index: 20;
+  pointer-events: none;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+  backdrop-filter: blur(4px);
+  transition: opacity var(--transition-base);
+}
+
+.swipe-overlay-wishlist {
+  background: rgba(0, 0, 0, 0.8);
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+}
+
+.swipe-overlay-buy {
+  background: #FFFFFF;
+  color: #000000;
+  border: 2px solid #FFFFFF;
+}
+
+.overlay-icon {
+  font-size: 2.5rem;
+  stroke-width: 1.5;
+}
+
+/* ── Mobile Overlay Elements (Hidden on Desktop) ───────────────────── */
+.reels-mobile-overlay-caption {
+  position: absolute;
+  bottom: var(--space-md);
+  left: var(--space-md);
+  right: var(--space-3xl);
+  z-index: 10;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  pointer-events: none;
+}
+
+@media (min-width: 1000px) {
+  .reels-mobile-overlay-caption { display: none; }
+}
+
+.mobile-brand-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.mobile-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: #FFFFFF;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.mobile-brand-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.mobile-caption-text {
+  font-size: 0.75rem;
+  color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  line-height: 1.4;
+}
+
+.mobile-price {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.reels-mobile-overlay-actions {
+  position: absolute;
+  right: var(--space-md);
+  bottom: 80px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+@media (min-width: 1000px) {
+  .reels-mobile-overlay-actions { display: none; }
+}
+
+.mobile-action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* ── Home Post Card Style (Aspect Ratio 4/5, header/footer text outside) ── */
+.home-post-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  margin: 0 auto;
+}
+
+.home-aspect {
+  aspect-ratio: 4/5 !important;
+}
+
+.home-card-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.home-card-actions .btn {
+  padding: 10px 16px;
+  font-size: 0.75rem;
+}
