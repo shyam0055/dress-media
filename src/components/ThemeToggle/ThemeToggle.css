@@ -1,0 +1,30 @@
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.toggle-track {
+  width: 52px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-hover);
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.toggle-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 2px 8px rgba(192, 132, 252, 0.5);
+  flex-shrink: 0;
+}
