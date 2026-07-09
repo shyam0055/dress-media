@@ -10,10 +10,15 @@ const api = axios.create({
 // ── Request Interceptor: attach Firebase ID token ─────────────────────────
 api.interceptors.request.use(
   async (config) => {
-    const user = auth.currentUser;
-    if (user) {
-      const token = await user.getIdToken();
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const token = await user.getIdToken();
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (tokenError) {
+      console.warn('[API] Failed to get auth token:', tokenError.message);
+      // Proceed without token — server will return 401 if needed
     }
     return config;
   },

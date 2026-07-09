@@ -21,7 +21,7 @@ Render offers a generous free tier for running Node.js web services.
 5.  Open the **Environment** tab and add the following variables:
     *   `NODE_ENV`: `production`
     *   `PORT`: `5000` (Render binds to this automatically)
-    *   `FIREBASE_PRIVATE_KEY_B64`: *(Your Base64-encoded Firebase Service Account Key)*
+    *   `FIREBASE_SERVICE_ACCOUNT_BASE64`: *(Your Base64-encoded Firebase Service Account Key — same value you have in your local server/.env)*
 6.  Click **Create Web Service**. 
 7.  Once deployed, copy the generated service URL (e.g. `https://dress-media-api.onrender.com`).
 

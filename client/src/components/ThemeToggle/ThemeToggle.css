@@ -3,28 +3,32 @@
   border: none;
   cursor: pointer;
   padding: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-toggle:active {
+  transform: scale(0.92);
 }
 
 .toggle-track {
-  width: 52px;
-  height: 28px;
+  width: 44px;
+  height: 24px;
   border-radius: var(--radius-full);
-  border: 1.5px solid var(--border-hover);
-  padding: 3px;
+  border: 1.5px solid var(--border-color);
+  padding: 2px;
   display: flex;
   align-items: center;
   position: relative;
+  transition: border-color var(--transition-base);
 }
 
 .toggle-thumb {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--radius-full);
-  background: var(--accent-gradient);
+  background: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  box-shadow: 0 2px 8px rgba(192, 132, 252, 0.5);
+  color: var(--text-inverse);
   flex-shrink: 0;
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiPlus, FiEdit2, FiTrash2, FiBarChart2, FiUsers, FiFilm, FiHeart, FiShoppingBag } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiBarChart2, FiUsers, FiFilm, FiHeart, FiShoppingBag } from 'react-icons/fi';
 import {
   adminGetStats, adminGetAllDresses, adminCreateDress, adminDeleteDress
 } from '../../services/api.js';
@@ -9,6 +9,15 @@ import { CONSTANTS } from '../../constants.js';
 import './Admin.css';
 
 const TABS = ['stats', 'upload', 'catalogue'];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+};
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('stats');
@@ -69,7 +78,6 @@ export default function AdminPanel() {
     }));
   };
 
-  // Upload via Cloudinary with real progress tracking
   const uploadFile = (file, resourceType = 'video') =>
     uploadToCloudinary(file, resourceType, setUploadProgress);
 
@@ -89,11 +97,9 @@ export default function AdminPanel() {
 
     setUploading(true);
     try {
-      // Upload video — Cloudinary auto-generates thumbnail from first frame
       const videoResult = await uploadFile(form.videoFile, 'video');
       const videoUrl = videoResult.url;
 
-      // Use auto-generated thumbnail OR upload a custom one if provided
       let thumbnailUrl = videoResult.thumbnailUrl;
       if (form.thumbnailFile) {
         const thumbResult = await uploadFile(form.thumbnailFile, 'image');
@@ -130,70 +136,85 @@ export default function AdminPanel() {
   const handleDelete = async (id) => {
     if (!window.confirm('Remove this dress from the feed?')) return;
     setDresses(prev => prev.filter(d => d.id !== id));
-    try { await adminDeleteDress(id); } catch { /* silent */ }
+    try { await adminDeleteDress(id); } catch (err) {
+      console.error('[Admin] Failed to delete dress:', id, err);
+      loadDresses(); // refresh from server on failure
+    }
   };
 
   return (
     <div className="admin-page page-enter">
-      <div className="admin-header">
+      <motion.div 
+        className="admin-header"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <h1 className="admin-title gradient-text">Admin Panel</h1>
         <p className="text-muted">Manage the DressSwipe catalogue</p>
-      </div>
+      </motion.div>
 
       {/* Tabs */}
       <div className="admin-tabs">
         {TABS.map(tab => (
-          <button
+          <motion.button
             key={tab}
             id={`admin-tab-${tab}`}
             className={`admin-tab ${activeTab === tab ? 'active' : ''}`}
             onClick={() => setActiveTab(tab)}
+            whileTap={{ scale: 0.96 }}
           >
             {tab === 'stats' && <FiBarChart2 />}
             {tab === 'upload' && <FiPlus />}
             {tab === 'catalogue' && <FiFilm />}
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
+          </motion.button>
         ))}
       </div>
 
-      {/* STATS TAB */}
+      {/* STATS TAB — staggered entrance */}
       {activeTab === 'stats' && (
-        <div className="admin-stats-grid">
+        <motion.div 
+          className="admin-stats-grid"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {stats ? (
             <>
-              <div className="stat-card glass-card">
-                <FiUsers className="stat-card-icon" />
-                <div className="stat-card-value">{stats.totalUsers}</div>
-                <div className="stat-card-label text-muted">Total Users</div>
-              </div>
-              <div className="stat-card glass-card">
-                <FiFilm className="stat-card-icon" />
-                <div className="stat-card-value">{stats.totalDresses}</div>
-                <div className="stat-card-label text-muted">Active Reels</div>
-              </div>
-              <div className="stat-card glass-card" style={{ '--card-color': 'var(--wishlist-color)' }}>
-                <FiHeart className="stat-card-icon wishlist" />
-                <div className="stat-card-value">{stats.wishlists}</div>
-                <div className="stat-card-label text-muted">Wishlisted</div>
-              </div>
-              <div className="stat-card glass-card" style={{ '--card-color': 'var(--buy-color)' }}>
-                <FiShoppingBag className="stat-card-icon buy" />
-                <div className="stat-card-value">{stats.buys}</div>
-                <div className="stat-card-label text-muted">Bought</div>
-              </div>
+              {[
+                { icon: FiUsers, value: stats.totalUsers, label: 'Total Users' },
+                { icon: FiFilm, value: stats.totalDresses, label: 'Active Reels' },
+                { icon: FiHeart, value: stats.wishlists, label: 'Wishlisted', extra: 'wishlist' },
+                { icon: FiShoppingBag, value: stats.buys, label: 'Bought', extra: 'buy' },
+              ].map((card) => (
+                <motion.div 
+                  key={card.label} 
+                  className="stat-card glass-card"
+                  variants={itemVariants}
+                >
+                  <card.icon className={`stat-card-icon ${card.extra || ''}`} />
+                  <div className="stat-card-value">{card.value}</div>
+                  <div className="stat-card-label text-muted">{card.label}</div>
+                </motion.div>
+              ))}
             </>
           ) : (
             Array(4).fill(0).map((_, i) => (
               <div key={i} className="stat-card skeleton" style={{ height: 140 }} />
             ))
           )}
-        </div>
+        </motion.div>
       )}
 
       {/* UPLOAD TAB */}
       {activeTab === 'upload' && (
-        <form className="admin-upload-form glass-card" onSubmit={handleUpload}>
+        <motion.form 
+          className="admin-upload-form glass-card" 
+          onSubmit={handleUpload}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
           <h3 className="admin-section-title">Upload New Reel</h3>
 
           {uploadError && <div className="admin-alert admin-alert-error">{uploadError}</div>}
@@ -234,19 +255,19 @@ export default function AdminPanel() {
               placeholder="Describe the dress, fabric, occasion..." rows={3} />
           </div>
 
-          {/* Sizes */}
           <div className="form-group">
             <label className="form-label">Sizes</label>
             <div className="size-selector">
               {CONSTANTS.SIZES.map(size => (
-                <button
+                <motion.button
                   key={size}
                   type="button"
                   className={`size-btn ${form.sizes.includes(size) ? 'active' : ''}`}
                   onClick={() => handleSizeToggle(size)}
+                  whileTap={{ scale: 0.92 }}
                 >
                   {size}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -264,7 +285,6 @@ export default function AdminPanel() {
             </div>
           </div>
 
-          {/* File uploads */}
           <div className="upload-form-grid">
             <div className="form-group">
               <label className="form-label" htmlFor="admin-video">Video Reel * (max 100MB)</label>
@@ -292,16 +312,18 @@ export default function AdminPanel() {
             </div>
           )}
 
-          <button
+          <motion.button
             id="admin-upload-submit"
             type="submit"
             className="btn btn-primary"
             disabled={uploading}
             style={{ height: 52 }}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
           >
             {uploading ? <span className="btn-spinner" /> : <><FiPlus /> Upload Reel</>}
-          </button>
-        </form>
+          </motion.button>
+        </motion.form>
       )}
 
       {/* CATALOGUE TAB */}
@@ -317,40 +339,42 @@ export default function AdminPanel() {
               <h3>No reels uploaded yet</h3>
             </div>
           ) : (
-            dresses.map(dress => (
-              <motion.div
-                key={dress.id}
-                className={`admin-dress-row glass-card ${!dress.isActive ? 'inactive' : ''}`}
-                layout
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <div className="admin-dress-thumb">
-                  {dress.thumbnailUrl
-                    ? <img src={dress.thumbnailUrl} alt={dress.title} />
-                    : <span>🎬</span>
-                  }
-                </div>
-                <div className="admin-dress-info">
-                  <span className="admin-dress-title">{dress.title}</span>
-                  <span className="text-muted admin-dress-meta">
-                    {dress.brand} · ₹{dress.price?.toLocaleString()} · {dress.category}
-                  </span>
-                  <div className="admin-dress-stats">
-                    <span>👁 {dress.viewCount || 0}</span>
-                    <span>❤️ {dress.likeCount || 0}</span>
-                    {!dress.isActive && <span className="badge badge-danger">Removed</span>}
-                  </div>
-                </div>
-                <button
-                  className="btn btn-ghost btn-icon"
-                  onClick={() => handleDelete(dress.id)}
-                  aria-label="Remove dress"
+            <motion.div variants={containerVariants} initial="hidden" animate="visible">
+              {dresses.map(dress => (
+                <motion.div
+                  key={dress.id}
+                  className={`admin-dress-row glass-card ${!dress.isActive ? 'inactive' : ''}`}
+                  layout
+                  variants={itemVariants}
                 >
-                  <FiTrash2 />
-                </button>
-              </motion.div>
-            ))
+                  <div className="admin-dress-thumb">
+                    {dress.thumbnailUrl
+                      ? <img src={dress.thumbnailUrl} alt={dress.title} />
+                      : <span>🎬</span>
+                    }
+                  </div>
+                  <div className="admin-dress-info">
+                    <span className="admin-dress-title">{dress.title}</span>
+                    <span className="text-muted admin-dress-meta">
+                      {dress.brand} · ₹{dress.price?.toLocaleString()} · {dress.category}
+                    </span>
+                    <div className="admin-dress-stats">
+                      <span>👁 {dress.viewCount || 0}</span>
+                      <span>❤️ {dress.likeCount || 0}</span>
+                      {!dress.isActive && <span className="badge badge-danger">Removed</span>}
+                    </div>
+                  </div>
+                  <motion.button
+                    className="btn btn-ghost btn-icon"
+                    onClick={() => handleDelete(dress.id)}
+                    aria-label="Remove dress"
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <FiTrash2 />
+                  </motion.button>
+                </motion.div>
+              ))}
+            </motion.div>
           )}
         </div>
       )}

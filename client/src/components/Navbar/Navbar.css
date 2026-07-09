@@ -1,4 +1,6 @@
-/* Top Bar (Mobile Only) */
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE TOP BAR — Minimal B&W glass header
+   ══════════════════════════════════════════════════════════════════ */
 .top-bar {
   position: fixed;
   top: 0;
@@ -6,8 +8,10 @@
   right: 0;
   height: var(--navbar-height);
   z-index: 50;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-base);
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 .top-bar-inner {
@@ -25,14 +29,19 @@
   align-items: center;
   gap: var(--space-sm);
   text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+.brand:active {
+  opacity: 0.6;
 }
 .brand-icon { 
-  font-size: 1.25rem; 
+  font-size: 1.125rem; 
   color: var(--text-primary);
+  animation: float 4s ease-in-out infinite;
 }
 .brand-name {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
@@ -45,7 +54,9 @@
   gap: var(--space-md);
 }
 
-/* Bottom Navigation (Mobile Only) */
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE BOTTOM NAV — Premium B&W glass bar with spring animations
+   ══════════════════════════════════════════════════════════════════ */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -53,12 +64,14 @@
   right: 0;
   height: var(--bottom-nav-height);
   z-index: 50;
-  border-top: 1px solid var(--border-color);
-  background: var(--bg-base);
+  border-top: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 var(--space-lg);
+  padding: 0 var(--space-md);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -66,16 +79,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 2px;
   padding: var(--space-sm) 0;
   color: var(--text-muted);
   text-decoration: none;
-  border-radius: var(--radius-sm);
-  transition: color var(--transition-base);
+  transition: all var(--transition-fast);
   flex: 1;
-  max-width: 72px;
+  max-width: 64px;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
-.bottom-nav-item:hover, .bottom-nav-item.active {
+.bottom-nav-item:active {
+  transform: scale(0.92);
+}
+.bottom-nav-item.active {
   color: var(--text-primary);
 }
 
@@ -83,41 +100,48 @@
   font-size: 1.25rem;
   transition: transform var(--transition-base);
 }
-.bottom-nav-item:hover .nav-icon {
-  transform: translateY(-1px);
+.bottom-nav-item.active .nav-icon {
+  transform: scale(1.1);
 }
 
 .nav-label {
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+.bottom-nav-item.active .nav-label {
+  opacity: 1;
 }
 
-/* ── Desktop Sidebar (Desktop Only) ────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   DESKTOP SIDEBAR — Clean minimal vertical nav
+   ══════════════════════════════════════════════════════════════════ */
 .desktop-sidebar {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 244px;
-  background: var(--bg-base);
+  width: 220px;
+  background: var(--bg-surface);
   border-right: 1px solid var(--border-color);
   padding: var(--space-xl) var(--space-lg);
   display: flex;
   flex-direction: column;
   z-index: 100;
-  display: none; /* Hidden by default, shown in media query */
+  display: none;
 }
 
 .sidebar-top {
-  margin-bottom: var(--space-3xl);
+  margin-bottom: var(--space-2xl);
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-xs);
   flex: 1;
 }
 
@@ -125,43 +149,41 @@
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  padding: 14px 16px;
+  padding: 12px 16px;
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  transition: all var(--transition-base);
-  border-left: 2px solid transparent;
+  transition: all var(--transition-fast);
+  border-radius: var(--radius-sm);
 }
 .sidebar-item:hover {
   color: var(--text-primary);
-  background: var(--bg-surface);
+  background: var(--bg-elevated);
 }
 .sidebar-item.active {
   color: var(--text-primary);
-  background: var(--bg-surface);
-  border-left-color: var(--text-primary);
+  background: var(--bg-elevated);
+  font-weight: 600;
 }
 
 .sidebar-item .nav-icon {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
+  flex-shrink: 0;
 }
 
 .sidebar-footer {
-  padding-top: var(--space-md);
+  padding-top: var(--space-lg);
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: center;
 }
 
-/* Responsive visibility rules */
 @media (min-width: 1000px) {
   .desktop-sidebar {
-    display: flex; /* Show sidebar on desktop */
+    display: flex;
   }
   .top-bar, .bottom-nav {
-    display: none; /* Hide mobile nav on desktop */
+    display: none;
   }
 }

@@ -1,6 +1,6 @@
 import { useTheme } from '../../context/ThemeContext.jsx';
 import { FiSun, FiMoon } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import './ThemeToggle.css';
 
 export default function ThemeToggle() {
@@ -13,24 +13,27 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
-      <motion.div
-        className="toggle-track"
-        animate={{ background: isDark ? 'rgba(192,132,252,0.2)' : 'rgba(124,58,237,0.15)' }}
-      >
+      <div className="toggle-track">
         <motion.div
           className="toggle-thumb"
           layout
-          animate={{ x: isDark ? 0 : 26 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+          animate={{ x: isDark ? 0 : 22 }}
         >
-          <motion.div
-            animate={{ rotate: isDark ? 0 : 180 }}
-            transition={{ duration: 0.3 }}
-          >
-            {isDark ? <FiMoon size={12} /> : <FiSun size={12} />}
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={isDark ? 'moon' : 'sun'}
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              style={{ display: 'flex' }}
+            >
+              {isDark ? <FiMoon size={11} /> : <FiSun size={11} />}
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
-      </motion.div>
+      </div>
     </button>
   );
 }

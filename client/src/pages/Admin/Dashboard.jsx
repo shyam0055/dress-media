@@ -1,7 +1,17 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { FiTrendingUp, FiShoppingBag, FiLayers, FiCheck, FiTruck, FiClock } from 'react-icons/fi';
 import { getUserOrders, updateOrderStatus, adminGetAllDresses } from '../../services/api.js';
 import './Dashboard.css';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+};
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
 
 export default function Dashboard() {
   const [orders, setOrders] = useState([]);
@@ -40,8 +50,6 @@ export default function Dashboard() {
   };
 
   const totalRevenue = orders.reduce((sum, o) => sum + (o.dressPrice || 0), 0);
-  const pendingOrders = orders.filter(o => o.status === 'pending').length;
-  const completedOrders = orders.filter(o => o.status === 'delivered').length;
 
   if (loading) {
     return (
@@ -53,53 +61,55 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-page page-enter">
-      <div className="dashboard-header">
+      <motion.div 
+        className="dashboard-header"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <h1 className="dashboard-title">Seller Dashboard</h1>
         <p className="text-muted">Manage your catalog, sales metrics, and delivery status</p>
-      </div>
+      </motion.div>
 
-      {/* ── Key Metrics Cards ────────────────────────────────────────── */}
-      <div className="dashboard-metrics">
-        <div className="metric-card glass-card">
-          <div className="metric-icon revenue"><FiTrendingUp /></div>
-          <div className="metric-details">
-            <span className="metric-label text-muted">Total Sales</span>
-            <h3 className="metric-value">₹{totalRevenue.toLocaleString()}</h3>
-          </div>
-        </div>
+      {/* ── Key Metrics Cards — staggered entrance ──────────────── */}
+      <motion.div 
+        className="dashboard-metrics"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {[
+          { icon: FiTrendingUp, label: 'Total Sales', value: `₹${totalRevenue.toLocaleString()}` },
+          { icon: FiShoppingBag, label: 'Total Orders', value: orders.length },
+          { icon: FiLayers, label: 'Active Listings', value: dresses.length },
+        ].map((m) => (
+          <motion.div key={m.label} className="metric-card glass-card" variants={itemVariants}>
+            <div className="metric-icon revenue"><m.icon /></div>
+            <div className="metric-details">
+              <span className="metric-label text-muted">{m.label}</span>
+              <h3 className="metric-value">{m.value}</h3>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
 
-        <div className="metric-card glass-card">
-          <div className="metric-icon orders"><FiShoppingBag /></div>
-          <div className="metric-details">
-            <span className="metric-label text-muted">Total Orders</span>
-            <h3 className="metric-value">{orders.length}</h3>
-          </div>
-        </div>
-
-        <div className="metric-card glass-card">
-          <div className="metric-icon listings"><FiLayers /></div>
-          <div className="metric-details">
-            <span className="metric-label text-muted">Active Listings</span>
-            <h3 className="metric-value">{dresses.length}</h3>
-          </div>
-        </div>
-      </div>
-
-      {/* ── SVG Sales Chart & Order Queue split ─────────────────────────── */}
+      {/* ── SVG Sales Chart & Order Queue split ─────────────────── */}
       <div className="dashboard-content-grid">
         
-        {/* Sales performance chart (pure SVG, B&W minimalist) */}
-        <div className="dashboard-chart-card glass-card">
+        {/* Sales performance chart */}
+        <motion.div 
+          className="dashboard-chart-card glass-card"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
           <h3 className="card-title">Weekly Performance</h3>
           <div className="chart-wrapper">
             <svg viewBox="0 0 400 200" className="sales-svg-chart">
-              {/* grid lines */}
               <line x1="40" y1="30" x2="380" y2="30" stroke="var(--border-color)" strokeDasharray="4 4" />
               <line x1="40" y1="80" x2="380" y2="80" stroke="var(--border-color)" strokeDasharray="4 4" />
               <line x1="40" y1="130" x2="380" y2="130" stroke="var(--border-color)" strokeDasharray="4 4" />
               <line x1="40" y1="170" x2="380" y2="170" stroke="var(--border-color)" />
 
-              {/* Chart Line path */}
               <path
                 d="M 60 160 Q 110 120 160 140 T 260 70 T 360 40"
                 fill="none"
@@ -107,23 +117,26 @@ export default function Dashboard() {
                 strokeWidth="3"
               />
 
-              {/* Data points */}
               <circle cx="60" cy="160" r="4" fill="var(--text-primary)" />
               <circle cx="160" cy="140" r="4" fill="var(--text-primary)" />
               <circle cx="260" cy="70" r="4" fill="var(--text-primary)" />
               <circle cx="360" cy="40" r="4" fill="var(--text-primary)" />
 
-              {/* Axis labels */}
               <text x="60" y="190" fontSize="10" fill="var(--text-muted)" textAnchor="middle">Mon</text>
               <text x="160" y="190" fontSize="10" fill="var(--text-muted)" textAnchor="middle">Wed</text>
               <text x="260" y="190" fontSize="10" fill="var(--text-muted)" textAnchor="middle">Fri</text>
               <text x="360" y="190" fontSize="10" fill="var(--text-muted)" textAnchor="middle">Sun</text>
             </svg>
           </div>
-        </div>
+        </motion.div>
 
         {/* Orders List / Tracker */}
-        <div className="dashboard-orders-card glass-card">
+        <motion.div 
+          className="dashboard-orders-card glass-card"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
           <h3 className="card-title">Order Fulfillment</h3>
           
           {orders.length === 0 ? (
@@ -174,7 +187,7 @@ export default function Dashboard() {
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
 
       </div>
     </div>

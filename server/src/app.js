@@ -41,23 +41,32 @@ app.use(cors({
 }));
 
 // ── Body Parsing ─────────────────────────────────────────────────────────────
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-// ── XSS Sanitization (manual — xss-clean is incompatible with Express 5) ────
-const sanitize = (obj) => {
-  if (typeof obj === 'string') {
-    return obj.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// ── XSS Sanitization — only sanitize strings, don't mutate arrays in place ──
+function sanitizeValue(val) {
+  if (typeof val === 'string') {
+    // Only sanitize user-entered string fields, not URLs or already-encoded data
+    return val.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+              .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '');
   }
-  if (typeof obj === 'object' && obj !== null) {
-    for (const key of Object.keys(obj)) {
-      obj[key] = sanitize(obj[key]);
+  if (val !== null && typeof val === 'object' && !Array.isArray(val)) {
+    const sanitized = {};
+    for (const key of Object.keys(val)) {
+      sanitized[key] = sanitizeValue(val[key]);
     }
+    return sanitized;
   }
-  return obj;
-};
+  if (Array.isArray(val)) {
+    return val.map(v => sanitizeValue(v));
+  }
+  return val;
+}
 app.use((req, _res, next) => {
-  if (req.body) req.body = sanitize(req.body);
+  if (req.body) {
+    req.body = sanitizeValue(req.body);
+  }
   next();
 });
 

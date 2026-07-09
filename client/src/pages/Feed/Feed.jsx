@@ -18,6 +18,37 @@ export default function Feed() {
   });
 
   const containerRef = useRef(null);
+  const [pullRefreshY, setPullRefreshY] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const touchStartRef = useRef(null);
+
+  // ── Pull-to-Refresh for Mobile ──────────────────────────────────
+  const handleTouchStart = useCallback((e) => {
+    if (window.scrollY <= 0 && !loading && !loadingMore) {
+      touchStartRef.current = e.touches[0].clientY;
+    }
+  }, [loading, loadingMore]);
+
+  const handleTouchMove = useCallback((e) => {
+    if (!touchStartRef.current) return;
+    const diff = e.touches[0].clientY - touchStartRef.current;
+    if (diff > 0) {
+      setPullRefreshY(Math.min(diff * 0.5, 80));
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (pullRefreshY > 60) {
+      setIsRefreshing(true);
+      loadFeed().finally(() => {
+        setIsRefreshing(false);
+        setPullRefreshY(0);
+      });
+    } else {
+      setPullRefreshY(0);
+    }
+    touchStartRef.current = null;
+  }, [pullRefreshY, loadFeed]);
 
   const dismissTutorial = useCallback(() => {
     if (showTutorial) {
@@ -33,7 +64,9 @@ export default function Feed() {
       setDresses(prev => cursor ? [...prev, ...res.dresses] : res.dresses);
       setPagination(res.pagination);
     } catch (err) {
-      setError('Could not load feed. Please try again.');
+      console.error('[Feed] Error loading feed:', err);
+      const msg = err?.message || err?.error?.message || 'Could not load feed. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -90,7 +123,7 @@ export default function Feed() {
 
   const currentDress = dresses[currentIndex];
 
-  if (loading) {
+  if (loading && dresses.length === 0) {
     return (
       <div className="feed-page">
         <div className="reels-main-layout">
@@ -106,7 +139,7 @@ export default function Feed() {
     return <div className="reel-skeleton skeleton" />;
   }
 
-  if (error) {
+  if (error && dresses.length === 0) {
     return (
       <div className="feed-page feed-error">
         <p>{error}</p>
@@ -118,7 +151,42 @@ export default function Feed() {
   }
 
   return (
-    <div className="feed-page" ref={containerRef}>
+    <div className="feed-page" ref={containerRef}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Pull-to-refresh indicator */}
+      {pullRefreshY > 0 && (
+        <div
+          className="feed-pull-indicator"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: `${pullRefreshY}px`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100,
+            color: 'var(--text-muted)',
+            fontSize: '0.75rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            background: 'var(--bg-base)',
+            transition: 'background 0.2s',
+          }}
+        >
+          {isRefreshing ? (
+            <span className="btn-spinner" style={{ borderTopColor: 'var(--text-primary)', width: 20, height: 20 }} />
+          ) : pullRefreshY > 60 ? (
+            'Release to refresh'
+          ) : (
+            'Pull to refresh'
+          )}
+        </div>
+      )}
       <div className="reels-main-layout">
         
         {/* ── Center Viewport carrying ReelPost ────────────────────────── */}

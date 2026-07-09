@@ -49,7 +49,7 @@ export const getDressById = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Dress not found.' });
     }
 
-    await doc.ref.update({ viewCount: (doc.data().viewCount || 0) + 1 });
+    await doc.ref.update({ viewCount: FieldValue.increment(1) });
 
     return res.json({ success: true, dress: { id: doc.id, ...doc.data() } });
   } catch (error) {

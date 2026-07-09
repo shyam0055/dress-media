@@ -12,10 +12,10 @@ export default function Navbar() {
       {/* ── Left Sidebar (Desktop Only — Instagram Web Style) ────────────── */}
       <aside className="desktop-sidebar" aria-label="Sidebar navigation">
         <div className="sidebar-top">
-          <div className="brand">
+          <NavLink to="/home" className="brand">
             <span className="brand-icon">👗</span>
             <span className="brand-name">DressSwipe</span>
-          </div>
+          </NavLink>
         </div>
 
         <nav className="sidebar-nav">
@@ -111,10 +111,10 @@ export default function Navbar() {
       {/* ── Top Bar (Mobile/Tablet Only) ──────────────────────────────── */}
       <header className="top-bar" role="banner">
         <div className="top-bar-inner">
-          <div className="brand">
+          <NavLink to="/home" className="brand">
             <span className="brand-icon">👗</span>
             <span className="brand-name">DressSwipe</span>
-          </div>
+          </NavLink>
           <div className="top-bar-actions">
             <ThemeToggle />
           </div>

@@ -55,18 +55,30 @@ export default function Login() {
         className="auth-container"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Logo */}
-        <div className="auth-logo">
+        {/* Logo — Bounce entrance */}
+        <motion.div 
+          className="auth-logo"
+          initial={{ scale: 0, rotate: -10 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 20, delay: 0.1 }}
+        >
           <span className="auth-logo-icon">👗</span>
           <h1 className="auth-logo-text gradient-text">DressSwipe</h1>
           <p className="auth-tagline">Discover your perfect style</p>
-        </div>
+        </motion.div>
 
         {/* Form Card */}
         <div className="auth-card glass-card">
-          <h2 className="auth-title">Welcome back</h2>
+          <motion.h2 
+            className="auth-title"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            Welcome back
+          </motion.h2>
           <p className="auth-subtitle text-muted">Sign in to continue swiping</p>
 
           {error && (
@@ -74,6 +86,7 @@ export default function Login() {
               className="auth-alert"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             >
               <FiAlertCircle />
               <span>{error}</span>
@@ -81,7 +94,12 @@ export default function Login() {
           )}
 
           <form onSubmit={handleSubmit} className="auth-form" noValidate>
-            <div className="form-group">
+            <motion.div 
+              className="form-group"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
               <label className="form-label" htmlFor="login-email">Email</label>
               <div className="input-wrapper">
                 <FiMail className="input-icon" />
@@ -97,9 +115,14 @@ export default function Login() {
                   required
                 />
               </div>
-            </div>
+            </motion.div>
 
-            <div className="form-group">
+            <motion.div 
+              className="form-group"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
               <label className="form-label" htmlFor="login-password">Password</label>
               <div className="input-wrapper">
                 <FiLock className="input-icon" />
@@ -123,20 +146,25 @@ export default function Login() {
                   {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
-            </div>
+            </motion.div>
 
-            <button
+            <motion.button
               id="login-submit"
               type="submit"
               className="btn btn-primary w-full auth-submit"
               disabled={loading}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
             >
               {loading ? (
                 <span className="btn-spinner" />
               ) : (
                 'Sign In'
               )}
-            </button>
+            </motion.button>
           </form>
 
           <p className="auth-switch text-muted">

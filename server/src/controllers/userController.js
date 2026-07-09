@@ -1,5 +1,6 @@
 import { db } from '../config/firebase-admin.js';
 import { FieldValue } from 'firebase-admin/firestore';
+import { createError } from '../middleware/errorHandler.js';
 
 // ── GET /api/user/profile ─────────────────────────────────────────────────
 export const getProfile = async (req, res, next) => {
@@ -17,11 +18,45 @@ export const updateProfile = async (req, res, next) => {
   try {
     const { username, avatarUrl, preferences } = req.body;
     const updates = {};
-    if (username) updates.username = username;
-    if (avatarUrl) updates.avatarUrl = avatarUrl;
-    if (preferences) updates.preferences = preferences;
-    updates.updatedAt = new Date().toISOString();
 
+    // Validate and sanitize username
+    if (username !== undefined) {
+      if (typeof username !== 'string' || username.trim().length === 0) {
+        return next(createError('Username must be a non-empty string.', 400));
+      }
+      if (username.trim().length > 50) {
+        return next(createError('Username must be 50 characters or less.', 400));
+      }
+      if (!/^[a-zA-Z0-9_.\- ]+$/.test(username.trim())) {
+        return next(createError('Username can only contain letters, numbers, spaces, and . - _', 400));
+      }
+      updates.username = username.trim();
+    }
+
+    // Validate avatar URL
+    if (avatarUrl !== undefined) {
+      if (typeof avatarUrl !== 'string') {
+        return next(createError('Avatar URL must be a string.', 400));
+      }
+      if (avatarUrl && !avatarUrl.startsWith('http')) {
+        return next(createError('Avatar URL must start with http:// or https://', 400));
+      }
+      updates.avatarUrl = avatarUrl;
+    }
+
+    // Validate preferences
+    if (preferences !== undefined) {
+      if (typeof preferences !== 'object' || preferences === null || Array.isArray(preferences)) {
+        return next(createError('Preferences must be a valid object.', 400));
+      }
+      updates.preferences = preferences;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return next(createError('No valid fields to update.', 400));
+    }
+
+    updates.updatedAt = new Date().toISOString();
     await db.collection('users').doc(req.user.uid).update(updates);
     return res.json({ success: true, message: 'Profile updated.' });
   } catch (error) {
@@ -42,11 +77,16 @@ export const getWishlist = async (req, res, next) => {
       chunks.push(wishlistIds.slice(i, i + 30));
     }
 
+    const snaps = await Promise.all(
+      chunks.map(chunk =>
+        db.collection('dresses').where('__name__', 'in', chunk).get()
+      )
+    );
+
     const dresses = [];
-    for (const chunk of chunks) {
-      const snap = await db.collection('dresses').where('__name__', 'in', chunk).get();
-      snap.docs.forEach(doc => dresses.push({ id: doc.id, ...doc.data() }));
-    }
+    snaps.forEach(snap =>
+      snap.docs.forEach(doc => dresses.push({ id: doc.id, ...doc.data() }))
+    );
 
     return res.json({ success: true, dresses });
   } catch (error) {
@@ -67,11 +107,16 @@ export const getCart = async (req, res, next) => {
       chunks.push(cartIds.slice(i, i + 30));
     }
 
+    const snaps = await Promise.all(
+      chunks.map(chunk =>
+        db.collection('dresses').where('__name__', 'in', chunk).get()
+      )
+    );
+
     const dresses = [];
-    for (const chunk of chunks) {
-      const snap = await db.collection('dresses').where('__name__', 'in', chunk).get();
-      snap.docs.forEach(doc => dresses.push({ id: doc.id, ...doc.data() }));
-    }
+    snaps.forEach(snap =>
+      snap.docs.forEach(doc => dresses.push({ id: doc.id, ...doc.data() }))
+    );
 
     return res.json({ success: true, dresses });
   } catch (error) {

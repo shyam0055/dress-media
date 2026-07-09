@@ -39,7 +39,9 @@ export default function Home() {
       const res = await getDressFeed({ limit: 20 });
       setDresses(res.dresses);
     } catch (err) {
-      setError('Could not load feed. Please try again.');
+      console.error('[Home] Error loading feed:', err);
+      const msg = err?.message || err?.error?.message || 'Could not load feed. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -72,7 +74,6 @@ export default function Home() {
     } catch { /* silent fail */ }
   }, []);
 
-  // Filter dresses based on brand selection
   const filteredDresses = dresses.filter(dress => {
     if (selectedBrand === 'all') return true;
     return dress.brand?.toLowerCase() === selectedBrand;
@@ -135,23 +136,26 @@ export default function Home() {
         {/* ── Left/Center Column (Stories + Post Card) ────────────────── */}
         <div className="home-center-column">
           
-          {/* Stories row */}
+          {/* Stories row — staggered entrance */}
           <div className="home-stories-container">
-            {MOCK_STORIES.map(story => (
-              <button
+            {MOCK_STORIES.map((story, i) => (
+              <motion.button
                 key={story.id}
                 className={`story-circle-btn ${selectedBrand === story.id ? 'active' : ''}`}
                 onClick={() => setSelectedBrand(story.id)}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05, duration: 0.3 }}
               >
                 <div className="story-avatar-ring">
                   <span className="story-emoji">{story.emoji}</span>
                 </div>
                 <span className="story-name">{story.name}</span>
-              </button>
+              </motion.button>
             ))}
           </div>
 
-          {/* Active Post card container */}
+          {/* Active Post card container — smooth transition */}
           <div className="home-viewport">
             {currentDress ? (
               <AnimatePresence mode="wait">
@@ -165,20 +169,30 @@ export default function Home() {
                 />
               </AnimatePresence>
             ) : (
-              <div className="home-empty-container">
+              <motion.div 
+                className="home-empty-container"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+              >
                 <span className="home-empty-icon">✨</span>
                 <h3>No posts found</h3>
                 <p className="text-muted">Try selecting a different brand story above</p>
                 <button className="btn btn-secondary" onClick={() => setSelectedBrand('all')}>
                   View All Brands
                 </button>
-              </div>
+              </motion.div>
             )}
           </div>
         </div>
 
         {/* ── Right Sidebar (User Meta + Suggestions) ─────────────────── */}
-        <aside className="home-right-sidebar">
+        <motion.aside 
+          className="home-right-sidebar"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           
           {/* User profile card */}
           <div className="sidebar-profile-card">
@@ -198,10 +212,16 @@ export default function Home() {
             <button className="suggestions-see-all">See All</button>
           </div>
 
-          {/* Suggestions List */}
+          {/* Suggestions List — staggered */}
           <div className="suggestions-list">
-            {MOCK_SUGGESTIONS.map(s => (
-              <div key={s.username} className="suggestion-item">
+            {MOCK_SUGGESTIONS.map((s, i) => (
+              <motion.div 
+                key={s.username} 
+                className="suggestion-item"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + i * 0.1 }}
+              >
                 <div className="suggestion-avatar">
                   {s.username[0].toUpperCase()}
                 </div>
@@ -210,7 +230,7 @@ export default function Home() {
                   <span className="suggestion-label">{s.label}</span>
                 </div>
                 <button className="suggestion-follow-btn">Follow</button>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -219,7 +239,7 @@ export default function Home() {
             <p>About · Help · Press · API · Jobs · Privacy · Terms</p>
             <p>© 2026 DRESSSWIPE FROM TEAM</p>
           </footer>
-        </aside>
+        </motion.aside>
 
       </div>
 
@@ -231,6 +251,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 40, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           >
             {toast.message}
           </motion.div>

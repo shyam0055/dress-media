@@ -1,60 +1,61 @@
-/* Dashboard Page - Seller Administration */
+/* ══════════════════════════════════════════════════════════════════
+   DASHBOARD PAGE — Minimal B&W Seller Admin
+   ══════════════════════════════════════════════════════════════════ */
 .dashboard-page {
   max-width: 935px;
   width: 100%;
   margin: 0 auto;
-  padding: var(--space-xl) var(--space-lg);
-  padding-bottom: 80px;
+  padding: var(--space-lg);
+  padding-bottom: calc(var(--bottom-nav-height) + var(--space-lg));
 }
 
 .dashboard-header {
-  margin-bottom: var(--space-2xl);
-  text-align: left;
+  margin-bottom: var(--space-xl);
 }
 
 .dashboard-title {
-  font-family: var(--font-display);
-  font-size: 1.618rem;
+  font-size: 1.25rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-primary);
-  margin-bottom: var(--space-xs);
 }
 
-/* Metrics row */
 .dashboard-metrics {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-md);
-  margin-bottom: var(--space-2xl);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
 }
-
 @media (min-width: 768px) {
   .dashboard-metrics {
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-xl);
+    gap: var(--space-md);
   }
 }
 
 .metric-card {
-  padding: var(--space-lg);
+  padding: var(--space-md);
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   border: 1px solid var(--border-color);
   background: var(--bg-surface);
+  border-radius: var(--radius-sm);
+}
+.metric-card:active {
+  transform: scale(0.98);
 }
 
 .metric-icon {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  background: var(--bg-card);
+  font-size: 1rem;
+  background: var(--bg-elevated);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
 }
@@ -62,54 +63,49 @@
 .metric-details {
   display: flex;
   flex-direction: column;
-  text-align: left;
 }
-
 .metric-label {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  color: var(--text-secondary);
 }
-
 .metric-value {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  margin-top: 2px;
+  color: var(--text-primary);
 }
 
-/* Content grid */
 .dashboard-content-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-xl);
+  gap: var(--space-md);
 }
-
 @media (min-width: 768px) {
   .dashboard-content-grid {
     grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-lg);
   }
 }
 
 .dashboard-chart-card, .dashboard-orders-card {
-  padding: var(--space-lg);
+  padding: var(--space-md);
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
   border: 1px solid var(--border-color);
   background: var(--bg-surface);
-  text-align: left;
+  border-radius: var(--radius-sm);
 }
 
 .card-title {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-primary);
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: var(--space-sm);
-  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-xs);
 }
 
 .chart-wrapper {
@@ -121,27 +117,30 @@
 
 .sales-svg-chart {
   width: 100%;
-  max-width: 100%;
   height: auto;
 }
+.sales-svg-chart path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw-line 2s ease forwards;
+}
 
-/* Fulfillment queue */
 .orders-queue-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   max-height: 400px;
   overflow-y: auto;
-  padding-right: 4px;
 }
 
 .order-fulfillment-item {
-  padding: var(--space-md);
-  border: 1px dashed var(--border-color);
-  background: var(--bg-card);
+  padding: var(--space-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
   display: flex;
   flex-direction: column;
   gap: 4px;
+  border-radius: var(--radius-xs);
 }
 
 .order-item-header {
@@ -149,21 +148,18 @@
   justify-content: space-between;
   align-items: center;
 }
-
 .order-item-title {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.order-item-price {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.order-item-buyer {
   font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.order-item-price {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.order-item-buyer {
+  font-size: 0.6875rem;
   color: var(--text-secondary);
 }
 
@@ -171,13 +167,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--space-sm);
+  margin-top: var(--space-xs);
   padding-top: var(--space-xs);
-  border-top: 1px dashed var(--border-color);
+  border-top: 1px solid var(--border-color);
 }
 
 .status-badge {
-  font-size: 0.6875rem;
+  font-size: 0.625rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -185,22 +181,36 @@
   align-items: center;
   gap: 4px;
 }
+.status-badge::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
 .status-badge.pending { color: var(--text-secondary); }
 .status-badge.shipped { color: var(--text-primary); }
-.status-badge.delivered { color: #10b981; }
+.status-badge.delivered { color: var(--text-primary); }
 
 .status-selector-input {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
-  padding: 4px var(--space-sm);
-  font-size: 0.6875rem;
+  padding: 3px 8px;
+  font-size: 0.625rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  outline: none;
   cursor: pointer;
+  border-radius: var(--radius-xs);
 }
-.status-selector-input:focus {
-  border-color: var(--text-primary);
+
+.orders-empty {
+  padding: var(--space-xl);
+  text-align: center;
+}
+.orders-empty .empty-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: var(--space-sm);
 }

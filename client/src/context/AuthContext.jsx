@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
           pendingRole = null;
           pendingUsername = null;
         } catch (err) {
-          // If backend is down, still allow login with Firebase user
+          console.warn('[Auth] Backend sync failed — proceeding with Firebase auth only:', err?.message);
         }
       } else {
         setUser(null);

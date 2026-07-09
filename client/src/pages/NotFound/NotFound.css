@@ -1,0 +1,54 @@
+/* ══════════════════════════════════════════════════════════════════
+   404 PAGE — Minimal B&W
+   ══════════════════════════════════════════════════════════════════ */
+.not-found-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  position: relative;
+  background: var(--bg-base);
+}
+
+.not-found-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  max-width: 380px;
+  animation: slide-up-fade 500ms var(--ease-out) forwards;
+}
+
+.not-found-icon {
+  font-size: 3rem;
+  animation: float 4s ease-in-out infinite;
+}
+
+.not-found-code {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.not-found-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+}
+
+.not-found-message {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.not-found-content .btn {
+  margin-top: var(--space-sm);
+}
